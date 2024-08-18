@@ -19,8 +19,12 @@ app.use(express.static('public'));
 app.get('/api/:date', function(req, res) {
   let dateParam = req.params.date;
   let unixVal, dateVal;
-if(dateParam===null){
-  res.json({unix:new Date(),utc:new Date()})
+  if (!dateParam) {
+    const currentDate = new Date();
+    return res.json({
+        unix: currentDate.getTime(),
+        utc: currentDate.toUTCString()
+    });
 }
   // Check if the dateParam is a number (Unix timestamp)
   if (!isNaN(dateParam) && dateParam.length >= 10) {
