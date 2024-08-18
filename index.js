@@ -16,12 +16,30 @@ app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 20
 app.use(express.static('public'));
 
 
-app.get('/api/:date',function(req,res,next){
-  console.log(req.params.date)
-  console.log(new Date(req.params.date).getUTCMilliseconds())
-  res.json({unix:new Date().getTime(),utc:new Date().toUTCString()})
-  
-})
+app.get('/api/:date', function(req, res) {
+  let dateParam = req.params.date;
+  let unixVal, dateVal;
+
+  // Check if the dateParam is a number (Unix timestamp)
+  if (!isNaN(dateParam) && dateParam.length >= 10) {
+      // Convert the string to an integer
+      unixVal = parseInt(dateParam);
+
+      // Create a new Date object using the timestamp
+      dateVal = new Date(unixVal).toUTCString();
+  } else {
+      // Treat the dateParam as a date string
+      dateVal = new Date(dateParam).toUTCString();
+      unixVal = new Date(dateParam).getTime();
+  }
+
+  // Check if the date is valid
+  if (dateVal === "Invalid Date") {
+      return res.json({ error: "Invalid Date" });
+  }
+
+  res.json({ unix: unixVal, utc: dateVal });
+});
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
