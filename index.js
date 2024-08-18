@@ -19,7 +19,9 @@ app.use(express.static('public'));
 app.get('/api/:date', function(req, res) {
   let dateParam = req.params.date;
   let unixVal, dateVal;
-
+if(dateParam===null){
+  res.json({unix:new Date().toUTCString(),utc:new Date()})
+}
   // Check if the dateParam is a number (Unix timestamp)
   if (!isNaN(dateParam) && dateParam.length >= 10) {
       // Convert the string to an integer
