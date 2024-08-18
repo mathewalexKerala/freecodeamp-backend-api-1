@@ -15,17 +15,19 @@ app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 20
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
-
-app.get('/api/:date', function(req, res) {
-  let dateParam = req.params.date;
-  let unixVal, dateVal;
-  if (!dateParam) {
+app.get('/api',function(req,res){
+  
     const currentDate = new Date();
-    return res.json({
+    res.json({
         unix: currentDate.getTime(),
         utc: currentDate.toUTCString()
     });
-}
+
+})
+app.get('/api/:date', function(req, res) {
+  let dateParam = req.params.date;
+  let unixVal, dateVal;
+
   // Check if the dateParam is a number (Unix timestamp)
   if (!isNaN(dateParam) && dateParam.length >= 10) {
       // Convert the string to an integer
